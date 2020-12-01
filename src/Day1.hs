@@ -12,6 +12,8 @@ import Control.Monad
 day1 :: IO ()
 day1 = do
 
+    -- `read` here is what turns strings into ints,
+    -- type inference helps us here.
     numbers <- map read <$> lines <$> readFile "inputs/Day1.txt"
 
     -- We could pick all solutions, but
