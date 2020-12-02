@@ -1,53 +1,25 @@
+{-# OPTIONS_GHC -Wall #-}
+
 module Day1 where
 
-import Control.Monad
 
--- Day 1 was easy. We are given a list
--- of numbers and we must find a pair of numbers that
--- adds to 2020, and then a triple of numbers that adds
--- to 2020.
-
--- The solution was easy using the list monad.
+readNumbers :: IO [Int]
+readNumbers = map read . lines <$> readFile "inputs/Day1.txt"
 
 day1 :: IO ()
 day1 = do
 
-    -- `read` here is what turns strings into ints,
-    -- type inference helps us here.
-    numbers <- map read <$> lines <$> readFile "inputs/Day1.txt"
+  numbers <- readNumbers
+  let (a1, b1) = problem1 numbers
+  let x1 = a1 * b1
+  let (a2, b2, c2) = problem2 numbers
+  let x2 = a2 * b2 * c2
+  putStrLn $ "x1=" ++ show x1
+  putStrLn $ "x2=" ++ show x2
 
-    -- We could pick all solutions, but
-    -- we only need one for the puzzle.
-    let (a, b) = head $ solve2 numbers
+problem1 :: [Int] -> (Int, Int)
+problem1 numbers = head [(a, b) | a <- numbers, b <- numbers, a + b == 2020]
 
-    print a
-    print b
-    print (a*b)
-
-    -- Same story but with 3 numbers.
-    let (a, b, c) = head $ solve3 numbers
-
-    print a
-    print b
-    print c
-    print (a*b*c)
-
-
--- Here I use the list monad to filter through all pairs of
--- numbers and return only those that satisfy some
--- criteria.
--- This is equivalent to using list comprehensions.
-solve2 :: [Int] -> [(Int, Int)
-solve2 numbers = do
-    a <- numbers
-    b <- numbers 
-    guard $ a + b == 2020
-    return (a, b)
-
-solver3 :: [Int] -> [(Int, Int, Int)]
-solve3 numbers = do
-    a <- numbers
-    b <- numbers 
-    c <- numbers 
-    guard $ a + b +c == 2020
-    return (a, b, c)
+problem2 :: [Int] -> (Int, Int, Int)
+problem2 numbers =
+  head [(a, b, c) | a <- numbers, b <- numbers, c <- numbers, a + b + c == 2020]
