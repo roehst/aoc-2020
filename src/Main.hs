@@ -1,6 +1,5 @@
 module Main where
 
-import qualified Day1
-import qualified Day2
+import qualified Day3
 
-main = Day2.day2
+main = Day3.day3
