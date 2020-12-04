@@ -78,7 +78,10 @@ hasValidValues dict = isJust $ do
 
   if hgtUnit == "cm"
     then guard $ hgtVal >= 150 && hgtVal <= 193
-    else guard $ hgtVal >= 59 && hgtVal <= 76
+    else
+      if hgtUnit == "in"
+        then guard $ hgtVal >= 59 && hgtVal <= 76
+        else guard $ False
   where
     assert key pred = do
       value <- M.lookup key dict
