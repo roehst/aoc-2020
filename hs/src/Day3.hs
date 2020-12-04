@@ -3,12 +3,12 @@
 
 module Day3 where
 
-data Stride =
-  Stride Int Int
+data Stride
+  = Stride Int Int
   deriving (Show)
 
-data Position =
-  Position Int Int
+data Position
+  = Position Int Int
   deriving (Show)
 
 class Toboggan a where
@@ -39,7 +39,7 @@ runDown toboggan (Stride down right) = loop (Position 0 0)
 
 day3 :: IO ()
 day3 = do
-  inputs <- lines <$> readFile "./inputs/Day3.txt"
+  inputs <- lines <$> readFile "../inputs/Day3.txt"
   let strides = map (uncurry Stride) [(1, 1), (1, 3), (1, 5), (1, 7), (2, 1)]
   print $ runDown inputs (Stride 1 3)
   print $ product $ map (runDown inputs) strides

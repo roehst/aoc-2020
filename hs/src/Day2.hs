@@ -3,12 +3,12 @@
 module Day2 where
 
 import Control.Monad (void)
+import Data.Either
 import Text.ParserCombinators.Parsec hiding (count)
-
 import Util
 
-data PasswordEntry =
-  PasswordEntry Int Int Char String
+data PasswordEntry
+  = PasswordEntry Int Int Char String
   deriving (Show)
 
 parseLine :: Parser PasswordEntry
@@ -37,10 +37,10 @@ check2 (PasswordEntry a b x p) =
        in (p1 == x) `xor` (p2 == x)
 
 parseEntry :: String -> PasswordEntry
-parseEntry = fromRight . parse parseLine ""
+parseEntry = fromRight undefined . parse parseLine ""
 
 day2 :: IO ()
 day2 = do
-  entries <- map parseEntry <$> readLines "inputs/Day2.txt"
+  entries <- map parseEntry <$> readLines "../inputs/Day2.txt"
   print $ count check1 entries
   print $ count check2 entries
