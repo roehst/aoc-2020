@@ -1,47 +1,21 @@
+#!runghc
+
+{-# OPTIONS_GHC -Wall #-}
+
 module Day4 where
 
 import Control.Monad (guard)
-import Data.Either
+import Data.List
 import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Maybe
-import Text.ParserCombinators.Parsec hiding (count)
 import Util
 
-type Key = String
-
-type Value = String
-
-type Record = Map Key Value
+type Record = Map String String
 
 type Check = Maybe ()
 
-parseKey :: Parser String
-parseKey = many1 letter
-
-parseValue :: Parser String
-parseValue = many1 (letter <|> digit <|> char '#')
-
-parseTag :: Parser (String, String)
-parseTag = (,) <$> (parseKey <* char ':') <*> parseValue
-
-parseLine :: Parser [(Key, Value)]
-parseLine = parseTag `sepBy` space
-
-parseFile :: [String] -> Either ParseError [Record]
-parseFile lines = parseFile' lines []
-
-parseFile' :: [String] -> [(Key, Value)] -> Either ParseError [Record]
-parseFile' [] buf = return [M.fromList buf]
-parseFile' (x : xs) buf =
-  case parse parseLine "" x of
-    Right [] -> do
-      rest <- parseFile' xs []
-      return $ M.fromList buf : rest
-    Right r ->
-      parseFile' xs (r ++ buf)
-
-requiredKeys :: [Key]
+requiredKeys :: [String]
 requiredKeys = ["iyr", "byr", "ecl", "pid", "hcl", "eyr", "hgt"]
 
 allowedEyeColors :: [String]
@@ -51,7 +25,8 @@ hasAllRequiredKeys :: Record -> Bool
 hasAllRequiredKeys record = all (`elem` M.keys record) requiredKeys
 
 hasValidValues :: Record -> Bool
-hasValidValues dict = isJust $ do
+hasValidValues record = isJust $ do
+
   assertInt "byr" (>= 1920)
   assertInt "byr" (<= 2002)
 
@@ -70,9 +45,9 @@ hasValidValues dict = isJust $ do
   assert "pid" ((== 9) . length)
 
   -- hgt is a bit trickier
-  hgt <- M.lookup "hgt" dict
+  hgt <- M.lookup "hgt" record
 
-  let hgtVal = read $ reverse $ drop 2 $ reverse $ hgt
+  let hgtVal = read $ reverse $ drop 2 $ reverse $ hgt :: Int
 
   let hgtUnit = reverse $ take 2 $ reverse $ hgt
 
@@ -83,23 +58,33 @@ hasValidValues dict = isJust $ do
         then guard $ hgtVal >= 59 && hgtVal <= 76
         else guard $ False
   where
-    assert key pred = do
-      value <- M.lookup key dict
-      guard $ pred value
+    assert :: String -> (String -> Bool) -> Check
+    assert key p = do
+      value <- M.lookup key record
+      guard $ p value
 
-    assertInt key pred = do
-      value <- read <$> M.lookup key dict
-      guard $ pred value
+    assertInt :: String -> (Int -> Bool) -> Check
+    assertInt key p = do
+      value <- read <$> M.lookup key record
+      guard $ p value
 
-day4 :: IO ()
-day4 = do
-  contents <- readFile "../inputs/Day4.txt"
+(|>) :: a -> (a -> b ) -> b
+(|>) x f = f x
 
-  let records = parseFile $ lines contents
+($|>) :: [a] -> (a -> b ) -> [b]
+($|>) x f = map f x
 
-  checkRecords (fromRight undefined records)
+recordToMap :: String -> Map String String
+recordToMap record = M.fromList $ record |> splitListBy (== ' ') $|> (split (== ':'))
 
-  return ()
+main :: IO ()
+main = do
+  
+  contents <- readFile "../../inputs/Day4.txt"
+
+  let records = contents |> lines |> splitList "" $|> (concat . intersperse " ") $|> recordToMap
+
+  checkRecords records
 
 checkRecords :: [Record] -> IO ()
 checkRecords records = do
