@@ -3,39 +3,34 @@
 from functools import reduce
 
 
-def main1():
+def union_many(xs):
+    return reduce(lambda a, b: a | b, xs)
+
+
+def intersection_many(xs):
+    return reduce(lambda a, b: a & b, xs)
+
+
+def main():
 
     groups = open("../inputs/Day6.txt", "r").read().split("\n\n")
 
-    total = 0
-
-    for group in groups:
-        group = group.replace("\n", "")
-        group = set(sorted(group))
-        total += len(group)
-
-    print(total)
-
-
-def main2():
-
-    groups = open("../inputs/Day6.txt", "r").read().split("\n\n")
-
-    total = 0
+    total1 = 0
+    total2 = 0
 
     for group in groups:
 
-        individuals = group.split("\n")
+        individuals = [set(individual) for individual in group.split("\n")]
 
-        individuals = [set(individual) for individual in individuals]
+        rules1 = union_many(individuals)
+        rules2 = intersection_many(individuals)
 
-        rules = reduce(lambda a, b: a.intersection(b), individuals)
+        total1 += len(rules1)
+        total2 += len(rules2)
 
-        total += len(rules)
-
-    print(total)
+    print(total1)
+    print(total2)
 
 
 if __name__ == '__main__':
-    main1()
-    main2()
+    main()
