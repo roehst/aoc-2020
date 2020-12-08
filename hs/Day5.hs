@@ -2,7 +2,7 @@
 
 {-# OPTIONS_GHC  -Wall #-}
 
-module Day5 where
+module Main where
 
 import Data.Maybe (fromJust)
 import Data.List (find)

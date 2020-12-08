@@ -1,8 +1,8 @@
 #!runghc
 
-{-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC  -Wall #-}
 
-module Day4 where
+module Main where
 
 import Control.Monad (guard)
 import Data.List

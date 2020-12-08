@@ -1,7 +1,8 @@
-{-# LANGUAGE FlexibleInstances #-}
-{-# OPTIONS_GHC -Wall #-}
+#!runghc
 
-module Day3 where
+{-# OPTIONS_GHC  -Wall #-}
+
+module Main where
 
 data Stride
   = Stride Int Int

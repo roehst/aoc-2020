@@ -4,22 +4,29 @@
 
 module Main where
 
-import qualified Data.Set as S
+import Data.Set (Set, intersection, union, fromList)
 import Util (splitStr)
 
-readGroups :: IO [[S.Set Char]]
+readGroups :: IO [[Set Char]]
 readGroups = do
+    
     contents <- readFile "../inputs/Day6.txt"
-    let groups = map lines . splitStr "\n\n" $ contents
-    return $ fmap S.fromList <$> groups
+    
+    -- Groups are separated by two lines
+    let groups = map lines $ splitStr "\n\n" $ contents
+
+    -- Convert groups from [String] to [Set Char]
+    let groups' = map fromList <$> groups
+    
+    return groups'
 
 main :: IO ()
 main = do
 
     groups <- readGroups
 
-    let union' = foldl1 S.union <$> groups
-    let intersection' = foldl1 S.intersection <$> groups
+    let union' = foldl1 union <$> groups
+    let intersection' = foldl1 intersection <$> groups
 
     print $ sum $ map length $ union'
     print $ sum $ map length $ intersection'

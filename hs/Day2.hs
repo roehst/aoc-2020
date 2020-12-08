@@ -1,10 +1,12 @@
+#!runghc
+
 {-# OPTIONS_GHC -Wall #-}
 
-module Day2 where
+module Main where
 
 import Control.Monad (void)
 import Data.Either
-import Text.ParserCombinators.Parsec hiding (count)
+import Text.ParserCombinators.Parsec hiding (count, space)
 import Util
 
 data PasswordEntry
@@ -13,17 +15,22 @@ data PasswordEntry
 
 parseLine :: Parser PasswordEntry
 parseLine = do
-  policyA <- parseInt
-  void $ char '-'
-  policyB <- parseInt
-  void space
+  policyA <- number
+  dash
+  policyB <- number
+  space
   policyCh <- letter
-  void $ char ':'
-  void space
-  policyPwd <- many1 letter
+  colon
+  space
+  policyPwd <- word
+
   return $ PasswordEntry policyA policyB policyCh policyPwd
   where
-    parseInt = read <$> many1 digit
+    colon = void $ char ':'
+    dash = void $ char '-'
+    space = void $ char ' '
+    number = read <$> many digit
+    word = many1 letter
 
 check1 :: PasswordEntry -> Bool
 check1 (PasswordEntry a b x p) =
@@ -39,8 +46,8 @@ check2 (PasswordEntry a b x p) =
 parseEntry :: String -> PasswordEntry
 parseEntry = fromRight undefined . parse parseLine ""
 
-day2 :: IO ()
-day2 = do
+main :: IO ()
+main = do
   entries <- map parseEntry <$> readLines "../inputs/Day2.txt"
   print $ count check1 entries
   print $ count check2 entries
