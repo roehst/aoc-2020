@@ -12,7 +12,8 @@ def check_1(past, future):
 		if a + b == cur:
 			possible = True
 			break
-	
+	# 236738408
+	# 268878261
 	if not possible:
 		return cur
 
