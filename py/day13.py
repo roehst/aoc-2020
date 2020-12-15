@@ -105,6 +105,7 @@ for (i, b) in p2.bus_lines:
     modulo = b
     rests.append(rest)
     modulos.append(b)
+    print(rest,modulo)
 
     
 
