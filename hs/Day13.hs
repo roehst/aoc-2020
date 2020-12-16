@@ -23,6 +23,13 @@ loadProblem path = do
         return (i, read b)
   return $ Problem ts entries
 
+
+egcd :: Int -> Int -> (Int, Int, Int)
+egcd a b =
+    egcd' a b 0
+    where
+        
+
 main = do
 
     problem <- loadProblem "../inputs/Day13.txt"
