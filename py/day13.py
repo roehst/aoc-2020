@@ -53,6 +53,8 @@ def problem1(problem):
     print(wait * bus_id)
 
 # https://martin-thoma.com/solve-linear-congruence-equations/
+
+
 def egcd(a, b):
 
     aO, bO = a, b
@@ -67,8 +69,10 @@ def egcd(a, b):
 
     return (lastx, lasty, aO * lastx + bO * lasty)
 
+
 def product(xs):
     return reduce(mul, xs)
+
 
 def solve_lgc(rests, modulos):
 
@@ -78,11 +82,12 @@ def solve_lgc(rests, modulos):
 
     for modulo_i, rest_i in zip(modulos, rests):
         Mi = M // modulo_i
-        (s, _ ,_) = egcd(Mi, modulo_i)
+        (s, _, _) = egcd(Mi, modulo_i)
         e = s * Mi
         x += rest_i * e
 
     return ((x % M) + M) % M, M
+
 
 path = "../inputs/Day13.txt"
 
@@ -105,9 +110,6 @@ for (i, b) in p2.bus_lines:
     modulo = b
     rests.append(rest)
     modulos.append(b)
-    print(rest,modulo)
-
-    
 
 
 print(solve_lgc(rests, modulos)[0])
